@@ -9,11 +9,14 @@ RUN apt-get update && apt-get install -y \
 # Composer（PHPのパッケージ管理ツール）をインストール
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# LaravelのpublicフォルダをApacheのルートに指定
+# LaravelのpublicフォルダをApacheのドキュメントルートに設定
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
 
-# 作業ディレクトリをApacheのドキュメントルートに設定
-WORKDIR /var/www/html
+# .htaccess を使うために mod_rewrite を有効化
+RUN a2enmod rewrite
 
-# Laravelアプリのソースコードをコピー（最初は空でもOK）
+# 作業ディレクトリを Laravel の public に設定
+WORKDIR /var/www/html/public
+
+# Laravelアプリのソースコードをコピー
 COPY src/ /var/www/html/

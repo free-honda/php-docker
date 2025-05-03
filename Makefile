@@ -27,3 +27,9 @@ shell-db:
 # phpMyAdminコンテナにシェルログイン（必要に応じて）
 shell-phpmyadmin:
 	docker exec -it php-phpmyadmin sh
+
+# Laravelのキャッシュをすべてクリアする
+cache-clear:
+	docker exec -it php-app php artisan config:clear
+	docker exec -it php-app php artisan route:clear
+	docker exec -it php-app php artisan view:clear
