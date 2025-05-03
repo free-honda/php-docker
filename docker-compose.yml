@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # Laravelアプリケーションを動かすコンテナ
+  app:
+    container_name: php-app  # コンテナ名を固定
+    build: .  # Dockerfile を使ってビルド
+    ports:
+      - "8080:80"  # ホストの8080番 → コンテナの80番（Apache）
+    volumes:
+      - ./src:/var/www/html  # ローカルのsrcをコンテナ内のLaravelディレクトリにマウント
+    depends_on:
+      - db  # dbサービスが先に起動している必要がある
+
+  # MySQL データベースサーバ
+  db:
+    container_name: php-db  # コンテナ名を固定
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root     # rootユーザーのパスワード
+      MYSQL_DATABASE: laravel       # 自動的に作成するデータベース名
+      MYSQL_USER: laravel           # アプリ用のユーザー名
+      MYSQL_PASSWORD: secret        # アプリ用ユーザーのパスワード
+    volumes:
+      - db-data:/var/lib/mysql  # データを永続化
+    ports:
+      - "3306:3306"  # 必要ならローカルからDB接続できるようにする
+
+  # phpMyAdmin（MySQLのGUI管理ツール）
+  phpmyadmin:
+    container_name: php-phpmyadmin  # コンテナ名を固定
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8081:80"  # ブラウザから http://localhost:8081 でアクセス可能
+    environment:
+      PMA_HOST: db  # 接続するMySQLホスト名
+      MYSQL_ROOT_PASSWORD: root
+
+# ボリューム定義（データ永続化）
+volumes:
+  db-data:
