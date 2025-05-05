@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   # Laravelアプリケーションを動かすコンテナ
-  app:
+  php-app:
     container_name: php-app  # コンテナ名を固定
     build: .  # Dockerfile を使ってビルド
     ports:

@@ -33,3 +33,11 @@ cache-clear:
 	docker exec -it php-app php artisan config:clear
 	docker exec -it php-app php artisan route:clear
 	docker exec -it php-app php artisan view:clear
+
+# マイグレーションを実行する
+migrate:
+	docker compose exec php-app php artisan migrate
+
+# 指定テーブルが存在するかを確認する（true が返ればOK）
+check-table:
+	docker compose exec php-app php artisan tinker --execute="\Schema::hasTable('messages');"
