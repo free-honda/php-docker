@@ -20,3 +20,7 @@ WORKDIR /var/www/html
 
 # Laravelアプリのソースコードをコピー（public/ も含まれる）
 COPY src/ /var/www/html/
+
+# ✅ オートローダー再生成
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader \
+    && composer dump-autoload
